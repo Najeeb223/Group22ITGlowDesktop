@@ -6,7 +6,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import za.ac.cput.domain.Employee;
-import za.ac.cput.domain.Contact;
 import za.ac.cput.factory.EmployeeFactory;
 import za.ac.cput.service.EmployeeService;
 
@@ -23,11 +22,11 @@ class EmployeeServiceTest {
 
     @Test
     void a_setup(){
-        employee1 = EmployeeFactory.buildEmployee("218130260", "Aphelele","Joka","Aphelele218130260","apelelejoka@gmail.com","0739875","0216987");
+        employee1 = EmployeeFactory.buildEmployee("218130260", "Kunge","Nceba","Nceba720101","kungenceba@gmail.com","0843348820","0216587772");
         assertNotNull(employee1);
         System.out.println(employee1);
 
-        employee2 = EmployeeFactory.buildEmployee("369258147", "Aphelele","Joka","Aphelele218130260","apelelejoka@gmail.com","08542","021745");
+        employee2 = EmployeeFactory.buildEmployee("369258147", "Aphelele","Joka","Aphelele218130260","apelelejoka@gmail.com","0843340567","0216582311");
         assertNotNull(employee2);
         System.out.println(employee2);
     }
@@ -50,7 +49,7 @@ class EmployeeServiceTest {
     }
     @Test
     void d_update(){
-        Employee newEmployee = new Employee.Builder().copy(employee2).setEmployeeID("123456789").build();
+        Employee newEmployee = new Employee.Builder().copy(employee2).setFirstName("Aphelele Zimmy").build();
         Employee updated= employeeService.update(newEmployee);
         assertNotNull(updated);
         System.out.println(updated);
@@ -59,6 +58,5 @@ class EmployeeServiceTest {
     void e_getall(){
         System.out.println(employeeService.getall());
     }
-
 
 }

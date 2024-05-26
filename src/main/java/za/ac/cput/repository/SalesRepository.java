@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import za.ac.cput.domain.Sales;
 @Repository
 public interface SalesRepository extends JpaRepository<Sales, String> {
-    void delete(String  salesID);
+   // void delete(String  salesID);
 }

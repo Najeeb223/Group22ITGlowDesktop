@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class AppointmentService implements IAppointmentService{
 
-    private AppointmentRepository repository;
+    private final AppointmentRepository repository;
 
     @Autowired
     AppointmentService(AppointmentRepository repository){

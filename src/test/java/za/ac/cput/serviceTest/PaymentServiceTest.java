@@ -17,7 +17,7 @@ class PaymentServiceTest {
 
     @Test
     void testCreatePayment() {
-        // Create a Payment object
+
         Payment payment = new Payment.Builder()
                 .setPaymentID("1")
                 .setBookingID("B001")
@@ -43,7 +43,7 @@ class PaymentServiceTest {
 
     @Test
     void testGetPaymentById() {
-        // Create a Payment object
+
         Payment payment = new Payment.Builder()
                 .setPaymentID("1")
                 .setBookingID("B001")
@@ -63,7 +63,7 @@ class PaymentServiceTest {
 
     @Test
     void testGetAllPayments() {
-        // Create some Payment objects
+
         Payment payment1 = new Payment.Builder()
                 .setPaymentID("1")
                 .setBookingID("B001")

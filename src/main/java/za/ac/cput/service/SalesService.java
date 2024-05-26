@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class SalesService implements ISalesService{
 
-    private SalesRepository repository;
+    private final SalesRepository repository;
 
     @Autowired
     SalesService(SalesRepository repository){

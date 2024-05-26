@@ -14,7 +14,7 @@ public class Client {
     private String firstName;
     private String lastName;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "email")
+    @JoinColumn(name = "email", referencedColumnName = "email")
     private Contact contact;
 
     protected Client(){

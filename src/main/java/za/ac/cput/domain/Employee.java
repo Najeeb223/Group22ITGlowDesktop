@@ -1,24 +1,25 @@
 package za.ac.cput.domain;
 
 /*
-Aphelele Zimkhita Joka 218130260
+ Aphelele Zimkhita Joka 218130260
+
  */
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 @Entity
-@IdClass(Contact.class)
 public class Employee {
     @Id
     private String employeeID;
     private String firstName;
     private String lastName;
     private String userName;
-@Id
-    private String email;
-    private String mobileNumber;
-    private String workTelephone;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "email")
+    private Contact contact;
+
 
     protected Employee() {
 
@@ -29,9 +30,8 @@ public class Employee {
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.userName = builder.userName;
-        this.email =  builder.email;
-        this.mobileNumber =  builder.mobileNumber;
-        this.workTelephone =  builder.workTelephone;
+        contact = builder.contact;
+
     }
 
     public String getEmployeeID() {
@@ -50,29 +50,21 @@ public class Employee {
         return userName;
     }
 
-    public String getEmail() {
-        return email;
+    public Contact getContact() {
+        return contact;
     }
 
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public String getWorkTelephone() {
-
-        return workTelephone;
-    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(employeeID, employee.employeeID) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(userName, employee.userName) && Objects.equals(email, employee.email) && Objects.equals(mobileNumber, employee.mobileNumber) && Objects.equals(workTelephone, employee.workTelephone);
+        return Objects.equals(employeeID, employee.employeeID) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(userName, employee.userName) && Objects.equals(contact, employee.contact);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employeeID, firstName, lastName, userName, email, mobileNumber, workTelephone);
+        return Objects.hash(employeeID, firstName, lastName, userName, contact);
     }
 
     @Override
@@ -82,9 +74,7 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
-                ", workTelephone='" + workTelephone + '\'' +
+                ", contact=" + contact +
                 '}';
     }
 
@@ -93,9 +83,7 @@ public class Employee {
         private String firstName;
         private String lastName;
         private String userName;
-        private String email;
-        private String mobileNumber;
-        private String workTelephone;
+        private Contact contact;
 
         public Builder setEmployeeID(String employeeID) {
             this.employeeID = employeeID;
@@ -117,29 +105,17 @@ public class Employee {
             return this;
         }
 
-        public Builder setEmail(String email) {
-            this.email = email;
+        public Builder setContact(Contact contact) {
+            this.contact = contact;
             return this;
         }
 
-        public Builder setMobileNumber(String mobileNumber) {
-            this.mobileNumber = mobileNumber;
-            return this;
-        }
-
-        public Builder setWorkTelephone(String workTelephone) {
-            this.workTelephone = workTelephone;
-            return this;
-        }
         public Builder copy(Employee employee) {
             this.employeeID = employee.employeeID;
             this.firstName = employee.firstName;
             this.lastName = employee.lastName;
             this.userName = employee.userName;
-            this.email = employee.email;
-            this.mobileNumber= employee.mobileNumber;
-            this.workTelephone= employee.workTelephone;
-
+            this.contact = employee.contact;
             return this;
         }
         public Employee build() {

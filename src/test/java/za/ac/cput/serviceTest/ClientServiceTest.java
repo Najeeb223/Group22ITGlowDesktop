@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClientServiceTest {
 
     @Autowired
-    ClientService service;
+    private ClientService service;
 
-    Client client;
+    private static Client client;
 
     @Test
     void a_setup() {

@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, String> {
-    List<Appointment> getAll();
+    //List<Appointment> getAll();
 }
 
