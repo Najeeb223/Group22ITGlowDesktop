@@ -5,6 +5,8 @@ Okuhle Vellem
  */
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 
 @Entity
 public class Schedule {
+
     @Id
     private String scheduleId;
     private String employeeId;

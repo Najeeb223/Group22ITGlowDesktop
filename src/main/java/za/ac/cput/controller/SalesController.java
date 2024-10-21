@@ -2,7 +2,7 @@ package za.ac.cput.controller;
 /*
 Sinentlahla Pindani 219081328
 26 May 2024
- */
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import za.ac.cput.domain.Sales;
@@ -47,3 +47,4 @@ public class SalesController {
 }
 
 
+ */

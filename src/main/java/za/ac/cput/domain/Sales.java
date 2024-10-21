@@ -3,7 +3,7 @@ package za.ac.cput.domain;
 /*
 Sinentlahla Pindani 219081328
 18 may 2024
- */
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -91,3 +91,4 @@ public class Sales {
 
         }
     }
+ */

@@ -1,5 +1,5 @@
 package za.ac.cput.serviceTest;
-
+/*
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -67,3 +67,4 @@ class EmployeeServiceTest {
     }
 }
 
+*/

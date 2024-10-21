@@ -1,5 +1,5 @@
 package za.ac.cput.service;
-
+/*
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +48,7 @@ public class SalesService implements ISalesService{
             return true;
         }
         return false;
-    }*/
+    }
 
 
     @Override
@@ -57,3 +57,4 @@ public class SalesService implements ISalesService{
     }
 
 }
+ */

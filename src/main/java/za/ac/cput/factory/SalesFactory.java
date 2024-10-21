@@ -4,7 +4,7 @@ package za.ac.cput.factory;
 Sinentlahla Pindani 219081328
 18 may 2024
 
- */
+
 
 
 import za.ac.cput.domain.Sales;
@@ -26,3 +26,4 @@ public class SalesFactory {
                 .build();
     }
 }
+ */

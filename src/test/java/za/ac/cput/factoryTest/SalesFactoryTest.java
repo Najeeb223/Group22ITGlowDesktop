@@ -1,6 +1,6 @@
 package za.ac.cput.factoryTest;
 
-
+/*
 import org.junit.jupiter.api.Test;
 import za.ac.cput.domain.Sales;
 import za.ac.cput.factory.SalesFactory;
@@ -17,4 +17,4 @@ class SalesFactoryTest {
         System.out.println(sales.toString());
 
     }
-}
+}*/

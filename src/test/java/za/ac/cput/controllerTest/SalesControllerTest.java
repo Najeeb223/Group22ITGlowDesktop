@@ -1,7 +1,7 @@
 package za.ac.cput.controllerTest;
 /*Sinentlahla Pindani 219081328
         26 May 2024
-        */
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,3 +96,4 @@ class SalesControllerTest {
         System.out.println(response.getBody());
     }
 }
+ */

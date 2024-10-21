@@ -3,7 +3,7 @@ package za.ac.cput.factory;
 
 /*
 Aphelele Zimkhita Joka
- */
+
 
 import za.ac.cput.domain.Contact;
 import za.ac.cput.domain.Employee;
@@ -38,3 +38,4 @@ public class EmployeeFactory {
     }
 }
 
+*/
