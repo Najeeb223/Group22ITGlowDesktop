@@ -1,215 +1,155 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-interface Schedule {
-  scheduleId: string;
-  employeeId: string;
-  scheduleDate: string;
-  startTime: string;
-  endTime: string;
+interface Appointment {
+  appointmentID: string;
+  clientId: string;
+  employeeID: string;
+  date: string;
+  time: string;
 }
 
-interface Employee {
-  id: string;
-}
+const Appointments = () => {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [confirmationMessage, setConfirmationMessage] = useState<string | null>(null);
 
-const CombinedSchedulePage: React.FC = () => {
-  const router = useRouter();
-  const [schedules, setSchedules] = useState<Schedule[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const [formData, setFormData] = useState<Partial<Schedule>>({
-    scheduleId: '',
-    employeeId: '',
-    scheduleDate: '',
-    startTime: '',
-    endTime: ''
-  });
-
-  // Fetch schedules and employees
+  // Fetch appointments when the component loads
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAppointments = async () => {
       try {
-        const scheduleResponse = await axios.get('http://localhost:8080/ITGlowDesktop/schedules'); // Fetch schedules
-        setSchedules(scheduleResponse.data);
+        const response = await fetch('http://localhost:8080/ITGlow/appointment/getAll', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-        const employeeResponse = await axios.get('http://localhost:8080/ITGlowDesktop/employees'); // Fetch employees
-        setEmployees(employeeResponse.data);
+        if (!response.ok) {
+          throw new Error('Failed to fetch appointments');
+        }
+
+        const data = await response.json();
+        setAppointments(data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching appointments:', error);
+        setLoading(false);
       }
     };
-    fetchData();
+
+    fetchAppointments();
   }, []);
 
-  // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  // Handle appointment selection
+  const handleSelectAppointment = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setConfirmationMessage(null); // Reset confirmation message on new selection
   };
 
-  // Handle form submission for creating/updating
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // Confirm the selected appointment
+  const handleConfirmAppointment = async () => {
+    if (!selectedAppointment) return;
+
     try {
-      if (selectedSchedule) {
-        // If a schedule is selected, update it
-        await axios.post(`/api/schedule/update`, formData);
+      const response = await fetch(`http://localhost:8080/ITGlow/appointment/confirm/${selectedAppointment.appointmentID}`, {
+        method: 'POST', // Adjust method based on your backend (POST, PATCH, etc.)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setConfirmationMessage('Booking confirmed successfully!');
+        // Delay clearing the selected appointment to show the confirmation message first
+        setTimeout(() => {
+          setSelectedAppointment(null);
+        }, 2000); // 2 seconds delay to keep the message visible
       } else {
-        // If no schedule is selected, create a new one
-        await axios.post(`/api/schedule/create`, formData);
+        throw new Error('Failed to confirm appointment');
       }
-      router.push('/dashboard/Schedule'); // Redirect or refresh
     } catch (error) {
-      console.error('Error saving schedule:', error);
+      console.error('Error confirming appointment:', error);
     }
   };
 
-  // Handle selecting a schedule for editing
-  const handleEdit = (schedule: Schedule) => {
-    setSelectedSchedule(schedule);
-    setFormData(schedule); // Pre-fill the form with the selected schedule's data
-  };
-
-  // Handle deleting a schedule
-  const handleDelete = async (scheduleId: string) => {
-    try {
-      await axios.delete(`/api/schedule/delete/${scheduleId}`);
-      setSchedules(schedules.filter(schedule => schedule.scheduleId !== scheduleId));
-    } catch (error) {
-      console.error('Error deleting schedule:', error);
-    }
-  };
+  if (loading) {
+    return <p>Loading appointments...</p>;
+  }
 
   return (
-    <main className="flex min-h-screen flex-col p-6 bg-[url('/salon.jpg')] bg-cover bg-center">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-pink-500 p-4 md:h-52">  
-      </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Get Bookings</h1>
 
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Schedules</h1>
-
-        {/* Schedule List */}
-        <table className="min-w-full bg-white rounded-lg shadow-md">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">Schedule ID</th>
-              <th className="px-4 py-2">Employee ID</th>
-              <th className="px-4 py-2">Date</th>
-              <th className="px-4 py-2">Start Time</th>
-              <th className="px-4 py-2">End Time</th>
-              <th className="px-4 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {schedules.map((schedule) => (
-              <tr key={schedule.scheduleId}>
-                <td className="border px-4 py-2">{schedule.scheduleId}</td>
-                <td className="border px-4 py-2">{schedule.employeeId}</td>
-                <td className="border px-4 py-2">{schedule.scheduleDate}</td>
-                <td className="border px-4 py-2">{schedule.startTime}</td>
-                <td className="border px-4 py-2">{schedule.endTime}</td>
+      {/* Appointment List */}
+      <table className="table-auto w-full border-collapse">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border px-4 py-2">Appointment ID</th>
+            <th className="border px-4 py-2">Client ID</th>
+            <th className="border px-4 py-2">Employee ID</th>
+            <th className="border px-4 py-2">Date</th>
+            <th className="border px-4 py-2">Time</th>
+            <th className="border px-4 py-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {appointments.length > 0 ? (
+            appointments.map((appointment) => (
+              <tr key={appointment.appointmentID}>
+                <td className="border px-4 py-2">{appointment.appointmentID}</td>
+                <td className="border px-4 py-2">{appointment.clientId}</td>
+                <td className="border px-4 py-2">{appointment.employeeID}</td>
+                <td className="border px-4 py-2">{new Date(appointment.date).toLocaleDateString()}</td>
+                <td className="border px-4 py-2">{appointment.time}</td>
                 <td className="border px-4 py-2">
-                  <button onClick={() => handleEdit(schedule)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-3 rounded mr-2">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(schedule.scheduleId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
-                    Delete
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleSelectAppointment(appointment)}
+                  >
+                    View & Confirm
                   </button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            ))
+          ) : (
+            <tr>
+              <td className="border px-4 py-2" colSpan={6}>
+                No appointments found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-        {/* Form to Create/Update Schedule */}
-        <div className="mt-6">
-          <h2 className="text-xl font-bold">{selectedSchedule ? 'Update Schedule' : 'Create New Schedule'}</h2>
-          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg mt-4">
-            <div className="mb-4">
-              <label className="block text-gray-700">Schedule ID</label>
-              <input
-                type="text"
-                name="scheduleId"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
-                value={formData.scheduleId || ''}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Employee ID</label>
-              <select
-                name="employeeId"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
-                value={formData.employeeId || ''}
-                onChange={handleChange}
-                required
-              >
-                <option value="" disabled>
-                  Select
-                </option>
-                {employees.map((employee) => (
-                  <option key={employee.id} value={employee.id}>
-                    {employee.id}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Date</label>
-              <input
-                type="date"
-                name="scheduleDate"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
-                value={formData.scheduleDate || ''}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Start Time</label>
-              <input
-                type="time"
-                name="startTime"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
-                value={formData.startTime || ''}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">End Time</label>
-              <input
-                type="time"
-                name="endTime"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
-                value={formData.endTime || ''}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="flex justify-between">
-              <button
-                type="button"
-                onClick={() => router.push('/dashboard/Schedule')}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Save
-              </button>
-            </div>
-          </form>
+      {/* Selected Appointment Form */}
+      {selectedAppointment && (
+        <div className="mt-6 border p-4 rounded bg-gray-100">
+          <h2 className="text-xl font-semibold">Confirm Booking</h2>
+          <p><strong>Appointment ID:</strong> {selectedAppointment.appointmentID}</p>
+          <p><strong>Client ID:</strong> {selectedAppointment.clientId}</p>
+          <p><strong>Employee ID:</strong> {selectedAppointment.employeeID}</p>
+          <p><strong>Date:</strong> {new Date(selectedAppointment.date).toLocaleDateString()}</p>
+          <p><strong>Time:</strong> {selectedAppointment.time}</p>
+
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+            onClick={handleConfirmAppointment}
+          >
+            Confirm Booking
+          </button>
         </div>
-      </div>
-    </main>
+      )}
+
+      {/* Confirmation Message */}
+      {confirmationMessage && (
+        <div className="mt-4 p-4 bg-green-200 text-green-800 rounded">
+          {confirmationMessage}
+        </div>
+      )}
+    </div>
   );
 };
 
-export default CombinedSchedulePage;
+export default Appointments;
